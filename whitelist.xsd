@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!--
+    Copyright © 2021 László Csöndes
+
+    This file is part of AssemblyChecker, a program that verifies the contents
+    of a directory against a whitelist based on various criteria.
+
+    AssemblyChecker is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of
+    the License, or (at your option) any later version.
+
+    AssemblyChecker is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with AssemblyChecker. If not, see <https://www.gnu.org/licenses/>.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="sha256">
+    <xs:restriction base="xs:string">
+      <!-- 64 nybbles = 256 bits -->
+      <xs:pattern value="[0-9A-F]{64}" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="Whitelist">
+    <xs:complexType>
+      <xs:sequence>
+        <!-- Filename patterns to be ignored -->
+        <xs:element name="Ignore" type="xs:string"
+                    minOccurs="0" maxOccurs="unbounded" />
+
+        <!-- Rules mostly tailored for assemblies but SHA256 is universal -->
+        <xs:element name="File" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="Path" type="xs:string" use="required" />
+            <xs:attribute name="Version" type="xs:string" use="optional" />
+            <xs:attribute name="FileVersion" type="xs:string" use="optional" />
+            <xs:attribute name="SHA256" type="sha256" use="optional" />
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
